@@ -1086,21 +1086,40 @@ bool __fastcall CreatorLayer_init(CCLayer* self) {
     CM->doUpdateCheck();
     //betterinfo btn
     auto menu = cast<CCMenu*>(self->getChildren()->objectAtIndex(1));
-
-    auto door = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(12));
+    // pos
+    auto editr = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
+    auto saved = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(1));
+    auto leders = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
+    // For Customizing
+    auto halloffame = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(7));
+    auto mappacks = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(8));
+    auto feter = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(6));
+    auto search = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(9));
+    
 
     //auto buttonSprite = gd::ButtonSprite::create("Better\nInfo", (int)(100*0.45), true, "bigFont.fnt", "GJ_button_01.png", 120*0.45f, 0.45f);
     auto buttonSprite = BetterInfo::createBISprite("BI_mainButton_001.png");
+    auto gauntletsfake = CCSprite::createWithSpriteFrameName("GJ_gauntletsBtn_001.png");
     buttonSprite->setScale(.9f);
+    gauntletsfake->setScale(.85f);
+    auto gauntletsbutton = gd::CCMenuItemSpriteExtra::create(gauntletsfake, self, menu_selector(GamingButton::onCustomCreatorLayer));
     auto buttonButton = gd::CCMenuItemSpriteExtra::create(
         buttonSprite,
         self,
         menu_selector(GamingButton::onCustomCreatorLayer)
     );
     buttonButton->setSizeMult(1.2f);
-    buttonButton->setPosition({door->getPositionX() - 1,0});
+    buttonButton->setPosition({saved->getPositionX(),-97});
     buttonButton->setTag(BetterInfo::mainBtnTag);
-    menu->addChild(buttonButton);
+    search->setPosition({leders->getPositionX(),-97});
+    feter->setPosition({ editr->getPositionX(),-97 });
+    mappacks->setPosition({ saved->getPositionX(),-97 });
+    editr->setPosition({ -150,97 });
+    saved->setPosition({ -50,97 });
+    leders->setPosition({ 50,97 });
+    gauntletsbutton->setPosition({ 150,97 });
+    menu->removeChild(halloffame, false);
+    menu->addChild(gauntletsbutton);
 
     //showQuestExclamationMark(self);
     CM = CvoltonManager::sharedState();
