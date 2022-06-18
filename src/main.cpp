@@ -1089,6 +1089,7 @@ void __fastcall LevelCell_loadLocalLevelCell(LevelCell* self)
     MHook::getOriginal(LevelCell_loadLocalLevelCell)(self);
     auto arrowwwwww = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
     arrowwwwww->setPosition({ 260,37 });
+    arrowwwwww->setScale(0.5f);
     self->addChild(arrowwwwww);
     
 }
@@ -1465,14 +1466,18 @@ void __fastcall EditLevelLayer_init(EditLevelLayer* self, void* a, CCObject* sen
     auto menu = cast<CCMenu*>(self->getChildren()->objectAtIndex(8));
     auto editor = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
     auto share = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
+    auto create = CCSprite::createWithSpriteFrameName("GJ_createLinesBtn_001.png");
+    auto createworks = CCMenuItemSpriteExtra::create(create, self, nullptr);
+    create->setScale(1.3f);
+    menu->addChild(createworks);
     menu->alignItemsHorizontallyWithPadding(20.0f);
 }
-void __fastcall EditLevelLayer_onPlay(EditLevelLayer* self, void* a, CCObject* sender)
+/*void __fastcall EditLevelLayer_onPlay(EditLevelLayer* self, void* a, CCObject* sender)
 {
     auto transitionFade = CCTransitionFade::create(0.5, CustomCreatorLayer::scene());
 
     CCDirector::sharedDirector()->pushScene(transitionFade);
-}
+}*/
 DWORD WINAPI my_thread(void* hModule) {
 
     /*AllocConsole();
@@ -1543,7 +1548,7 @@ DWORD WINAPI my_thread(void* hModule) {
     MHook::registerHook(base + 0xA2960, GameLevelManager_getSavedLevels); 
     MHook::registerHook(base + 0xA43B0, GameLevelManager_limitSavedLevels);
     MHook::registerHook(base + 0x6F5D0, EditLevelLayer_init);
-    MHook::registerHook(base + 0x71700, EditLevelLayer_onPlay);
+    //MHook::registerHook(base + 0x71700, EditLevelLayer_onPlay);
     MHook::registerHook(base + 0x5BE30, LevelCell_loadLocalLevelCell);
     //MHook::registerHook(base + 0x180FC0, LevelSearchLayer_onSearch);
     //MHook::registerHook(base + 0xF9AE0, GameStatsManager_incrementChallenge);
