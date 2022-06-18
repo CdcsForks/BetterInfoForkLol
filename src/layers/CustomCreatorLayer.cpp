@@ -181,10 +181,14 @@ bool CustomCreatorLayer::init() {
     cornerBR->setAnchorPoint({0,0});
     cornerBR->setRotation(270);
     addChild(cornerBR, -1);
+    auto SomeBtn = CCSprite::createWithSpriteFrameName("GJ_challengeBtn_001.png");
+    auto SomeBtnWorking = gd::CCMenuItemSpriteExtra::create(SomeBtn, this, menu_selector(CustomCreatorLayer::onFlalerts));
+    SomeBtnWorking->setPosition({ 120,-55 });
+    SomeBtnWorking->setSizeMult(1.2f);
+    menu->addChild(SomeBtnWorking);
 
     return true;
 }
-
 void CustomCreatorLayer::keyBackClicked() {
     CCDirector::sharedDirector()->popSceneWithTransition(0.5f, PopTransition::kPopTransitionFade);
 }
@@ -261,6 +265,11 @@ void CustomCreatorLayer::onUpdate(CCObject* object) {
 
 void CustomCreatorLayer::onSettings(CCObject* object) {
     CvoltonOptionsLayer::create()->show();
+}
+
+void CustomCreatorLayer::onFlalerts(CCObject* object) {
+    auto uptodate = gd::FLAlertLayer::create(nullptr, "Update Check", "OK", nullptr, "BetterInfo is up to date!");
+    uptodate->show();
 }
 
 CCScene* CustomCreatorLayer::scene() {

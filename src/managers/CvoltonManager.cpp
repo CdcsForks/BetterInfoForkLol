@@ -126,6 +126,7 @@ bool CvoltonManager::isUpToDate(){
     return version == latestVer;
 }
 
+
 void CvoltonManager::encodeDataTo(DS_Dictionary* data) {
     data->setDictForKey("settings", settingsDict);
     data->setStringForKey("versionString", version);

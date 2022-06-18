@@ -917,24 +917,23 @@ void __fastcall InfoLayer_loadPage(InfoLayer* self, void* a, int page, bool relo
 
     std::cout << menu->getChildrenCount() << std::endl;
 
-    for(unsigned int i = 0; i < menu->getChildrenCount(); i++){
+    for (unsigned int i = 0; i < menu->getChildrenCount(); i++) {
         auto commentBtn = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(i));
         std::cout << i << std::endl;
-        if(commentBtn == nullptr) continue;
+        if (commentBtn == nullptr) continue;
 
         std::cout << commentBtn->getTag() << std::endl;
 
 
-        if(commentBtn->getTag() == commentPageBtnTag){
+        if (commentBtn->getTag() == commentPageBtnTag) {
 
             auto commentBtnSprite = cast<ButtonSprite*>(commentBtn->getChildren()->objectAtIndex(0));
-            if(commentBtnSprite == nullptr) continue;
+            if (commentBtnSprite == nullptr) continue;
 
-            commentBtnSprite->setString(std::to_string(page+1).c_str());
+            commentBtnSprite->setString(std::to_string(page + 1).c_str());
         }
     }
 }
-
 void __fastcall LevelBrowserLayer_updateLevelsLabel(LevelBrowserLayer* self, void* a) {
     MHook::getOriginal(LevelBrowserLayer_updateLevelsLabel)(self, a);
 
@@ -1077,10 +1076,25 @@ void showQuestExclamationMark(CCLayer* creator){
     exMark->setTag(questBtnExMarkTag);
     questBtn->addChild(exMark);
 }
-
+class CallBacks
+{
+public:
+    void OnFame(CCObject* caller)
+    {
+        gd::FLAlertLayer::create(nullptr,"","","","")->show();
+    }
+};
+void __fastcall LevelCell_loadLocalLevelCell(LevelCell* self)
+{
+    MHook::getOriginal(LevelCell_loadLocalLevelCell)(self);
+    auto arrowwwwww = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+    arrowwwwww->setPosition({ 260,37 });
+    self->addChild(arrowwwwww);
+    
+}
 bool __fastcall CreatorLayer_init(CCLayer* self) {
     if(!MHook::getOriginal(CreatorLayer_init)(self)) return false;
-
+    auto uptodate = gd::FLAlertLayer::create(nullptr, "Update Check", "OK", nullptr, "BetterInfo is up to date!");
     //update check
     auto CM = CvoltonManager::sharedState();
     CM->doUpdateCheck();
@@ -1090,8 +1104,10 @@ bool __fastcall CreatorLayer_init(CCLayer* self) {
     auto editr = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
     auto saved = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(1));
     auto leders = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
+    auto dor = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(12));
     // For Customizing
     auto halloffame = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(7));
+    //auto halloffamespritebad = cast<CCSprite*>(halloffame->getChildren()->objectAtIndex(0));
     auto mappacks = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(8));
     auto feter = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(6));
     auto search = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(9));
@@ -1100,9 +1116,14 @@ bool __fastcall CreatorLayer_init(CCLayer* self) {
     //auto buttonSprite = gd::ButtonSprite::create("Better\nInfo", (int)(100*0.45), true, "bigFont.fnt", "GJ_button_01.png", 120*0.45f, 0.45f);
     auto buttonSprite = BetterInfo::createBISprite("BI_mainButton_001.png");
     auto gauntletsfake = CCSprite::createWithSpriteFrameName("GJ_gauntletsBtn_001.png");
+    auto hallfame = CCSprite::createWithSpriteFrameName("GJ_fameBtn_001.png");
+    auto arrowwwwww = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
     buttonSprite->setScale(.9f);
     gauntletsfake->setScale(.85f);
+    hallfame->setScale(.85f);
     auto gauntletsbutton = gd::CCMenuItemSpriteExtra::create(gauntletsfake, self, menu_selector(GamingButton::onCustomCreatorLayer));
+    auto arrowclickable = gd::CCMenuItemSpriteExtra::create(arrowwwwww, self, nullptr);
+    auto hallfamenew = gd::CCMenuItemSpriteExtra::create(hallfame, self, menu_selector(CallBacks::OnFame));
     auto buttonButton = gd::CCMenuItemSpriteExtra::create(
         buttonSprite,
         self,
@@ -1111,15 +1132,25 @@ bool __fastcall CreatorLayer_init(CCLayer* self) {
     buttonButton->setSizeMult(1.2f);
     buttonButton->setPosition({saved->getPositionX(),-97});
     buttonButton->setTag(BetterInfo::mainBtnTag);
-    search->setPosition({leders->getPositionX(),-97});
-    feter->setPosition({ editr->getPositionX(),-97 });
-    mappacks->setPosition({ saved->getPositionX(),-97 });
+    //search->setPosition({leders->getPositionX(),-97});
+    //feter->setPosition({ editr->getPositionX(),-97 });
+    //mappacks->setPosition({ saved->getPositionX(),-97 });
+    search->setPosition({ 150,-97 });
+    feter->setPosition({ -150,-97 });
+    mappacks->setPosition({ 50,-97 });
+    hallfamenew->setPosition({ -50,-97 });
     editr->setPosition({ -150,97 });
     saved->setPosition({ -50,97 });
     leders->setPosition({ 50,97 });
+    arrowclickable->setPosition({ dor->getPositionX() - 20,0 });
+    arrowwwwww->setScaleX(-1);
     gauntletsbutton->setPosition({ 150,97 });
+    //halloffame->addChild(hallfame);
+    //halloffame->removeChild(halloffamespritebad, false);
     menu->removeChild(halloffame, false);
     menu->addChild(gauntletsbutton);
+    //menu->addChild(arrowclickable);
+    menu->addChild(hallfamenew);
 
     //showQuestExclamationMark(self);
     CM = CvoltonManager::sharedState();
@@ -1428,6 +1459,20 @@ void setupDailyNew(){
     WriteProcessMemory(proc, winapiBase + 0x6C709, patch, 7, NULL);
 }
 
+void __fastcall EditLevelLayer_init(EditLevelLayer* self, void* a, CCObject* sender)
+{
+    MHook::getOriginal(EditLevelLayer_init)(self,a,sender);
+    auto menu = cast<CCMenu*>(self->getChildren()->objectAtIndex(8));
+    auto editor = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(0));
+    auto share = cast<CCMenuItemSpriteExtra*>(menu->getChildren()->objectAtIndex(2));
+    menu->alignItemsHorizontallyWithPadding(20.0f);
+}
+void __fastcall EditLevelLayer_onPlay(EditLevelLayer* self, void* a, CCObject* sender)
+{
+    auto transitionFade = CCTransitionFade::create(0.5, CustomCreatorLayer::scene());
+
+    CCDirector::sharedDirector()->pushScene(transitionFade);
+}
 DWORD WINAPI my_thread(void* hModule) {
 
     /*AllocConsole();
@@ -1497,6 +1542,9 @@ DWORD WINAPI my_thread(void* hModule) {
     MHook::registerHook(base + 0xA2D20, GameLevelManager_getCompletedLevels); 
     MHook::registerHook(base + 0xA2960, GameLevelManager_getSavedLevels); 
     MHook::registerHook(base + 0xA43B0, GameLevelManager_limitSavedLevels);
+    MHook::registerHook(base + 0x6F5D0, EditLevelLayer_init);
+    MHook::registerHook(base + 0x71700, EditLevelLayer_onPlay);
+    MHook::registerHook(base + 0x5BE30, LevelCell_loadLocalLevelCell);
     //MHook::registerHook(base + 0x180FC0, LevelSearchLayer_onSearch);
     //MHook::registerHook(base + 0xF9AE0, GameStatsManager_incrementChallenge);
     //MHook::registerHook(base + 0x2133E0, ProfilePage_getUserInfoFailed);

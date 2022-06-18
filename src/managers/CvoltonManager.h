@@ -48,6 +48,7 @@ public:
 	void forceUpdateCheck();
 	void downloadChangelog(CvoltonUpdateLayer* updateLayer);
 	bool isUpToDate();
+	void isUpToDatePopup();
 	bool getOption(std::string option);
 	bool toggleOption(std::string option);
 	bool setOption(std::string option, bool value);

@@ -15,6 +15,8 @@ protected:
     void onInfo(cocos2d::CCObject*);
     void onSearch(cocos2d::CCObject*);
     void onSettings(cocos2d::CCObject*);
+    void onFlalerts(cocos2d::CCObject*);
+    void * Famehall(cocos2d::CCObject*);
 public:
     static CustomCreatorLayer* create();
     static cocos2d::CCScene* scene();
